@@ -13,5 +13,21 @@ export const token = {
     key: process.env.TOKEN_KEY as string,
 };
 
-const missingProperties = checkForMissingProperties({ ...db, ...token });
+export const mg = {
+    to: process.env.MAILGUN_TO,
+    domain: process.env.MAILGUN_DOMAIN,
+    key: process.env.MAILGUN_API_KEY,
+};
+
+export const tw = {
+    number: process.env.TWILIO_NUM,
+    sid: process.env.TWILIO_SID,
+    token: process.env.TWILIO_TOKEN,
+};
+
+export const domain = {
+    base: process.env.DOMAIN_BASE,
+};
+
+const missingProperties = checkForMissingProperties({ ...db, ...token, ...mg, ...tw, ...domain });
 if (missingProperties) throw new Error("MISSING REQUIRED ENVARS");

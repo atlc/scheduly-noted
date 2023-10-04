@@ -1,6 +1,7 @@
 import express from "express";
 import db from "../../database";
 import utils from "../../utils";
+import { sendVerificationEmail } from "../../services/email";
 
 const router = express.Router();
 
@@ -38,8 +39,12 @@ router.post("/", async (req, res) => {
     try {
         const hashed = await utils.passwords.slinging_slasher(password);
         const result = await db.users.register({ name, email, username, password: hashed, phone });
-        const token = utils.tokens.sign({ id: result.insertId! });
-        res.status(201).json({ message: "Successfully registered!", id: result.insertId, token });
+        await sendVerificationEmail(result.insertId!, email);
+        res.status(201).json({
+            message:
+                "Successfully registered! Please check your email to verify your account to continue using the site.",
+            id: result.insertId,
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "SERVER'S BROKE" });
