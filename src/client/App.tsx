@@ -12,8 +12,8 @@ const App = (props: AppProps) => {
                 <Route
                     path="/"
                     element={
-                        <div className="mx-auto mt-5 w-25">
-                            <div className="alert alert-info text-center">Hello </div>
+                        <div className="flex flex-wrap justify-center">
+                            <div className="bg-blue-300 text-blue-700">Hello </div>
                         </div>
                     }
                 />
