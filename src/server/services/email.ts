@@ -39,10 +39,31 @@ export const sendVerificationEmail = async (user_id: User["id"], email: string) 
         await db.codes.create({ id: uuid, user_id, created_at, expires_at });
         await sendMail({
             to: email,
-            from: "<Registration> registration@atlc.dev",
+            from: "<Registration> noreply@atlc.dev",
             subject: "Click the link plz",
             body: `
-    <h1>Click the link to <a href="${domain.base}/verify?code=${uuid}">verify your account</a></h1>
+    <h1>Click the link to <a href="${domain.base}/verify?code=${uuid}&type=verify">verify your account</a></h1>
+    <h2>Please note that any previous codes will be invalidated, and this code will only be valid for 15 minutes.</h2>
+        `,
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const sendMagicLink = async (user_id: User["id"], email: string) => {
+    try {
+        await db.codes.deleteBy.userId(user_id);
+        const uuid = v4();
+        const created_at = Date.now();
+        const expires_at = created_at + FIFTEEN_MINUTES;
+        await db.codes.create({ id: uuid, user_id, created_at, expires_at });
+        await sendMail({
+            to: email,
+            from: "<Magic Link> noreply@atlc.dev",
+            subject: "Here is your magic link to login",
+            body: `
+    <h1>Click the link to <a href="${domain.base}/verify?code=${uuid}&type=magic">login</a></h1>
     <h2>Please note that any previous codes will be invalidated, and this code will only be valid for 15 minutes.</h2>
         `,
         });

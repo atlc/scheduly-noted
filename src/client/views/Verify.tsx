@@ -1,17 +1,16 @@
 import React, { useEffect } from "react";
+import { GET } from "../services/api";
+import LS from "../services/localStorage";
 
 const Verify = () => {
     useEffect(() => {
         async function checkEm() {
             const url = new URL(window.location.href);
             const code = url.searchParams.get("code");
-            const res = await fetch("http://localhost:3000/auth/email/verify?code=" + code);
-            const data = await res.json();
-            if (res.ok) {
-                alert(data.token);
-            } else {
-                alert(data.message);
-            }
+            const type = url.searchParams.get("type");
+            GET(`http://localhost:3000/auth/email/verify?code=${code}&type=${type}`).then((data) => {
+                if (data.token) LS.setToken(data.token);
+            });
         }
         checkEm();
     }, []);
