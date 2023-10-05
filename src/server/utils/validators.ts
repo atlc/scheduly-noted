@@ -1,7 +1,7 @@
 export const isTruthy = (val: any) => !!val;
 export const isString = (val: any) => typeof val === "string";
 export const maxLength = (val: string, maxLen: number) => val.length <= maxLen;
-export const minLength = (val: string, minLen: number) => val.length <= minLen;
+export const minLength = (val: string, minLen: number) => val.length >= minLen;
 
 export const stringCheck = (val: any, maxLen: number, minLen: number = 1) =>
     isTruthy(val) && isString(val) && maxLength(val, maxLen) && minLength(val, minLen);

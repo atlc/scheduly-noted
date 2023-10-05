@@ -15,7 +15,7 @@ export const Query = <Pizza = PG_Results>(sql: string, values: unknown[] = []) =
             if (result.command === "SELECT") {
                 resolve(result.rows as Pizza);
             } else if (result.command === "INSERT") {
-                const insertId = result.rows[0].id;
+                const insertId = result.rows[0]?.id;
                 resolve({ ...result, insertId } as Pizza);
             } else {
                 resolve(result as Pizza);

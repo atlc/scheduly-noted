@@ -12,10 +12,10 @@ interface NewUser {
 type columns = "email" | "username" | "id";
 
 const by = (column: columns, value: string | number) =>
-    Query<User[]>("SELECT * FROM Users WHERE $1=$2", [column, value]);
+    Query<User[]>(`SELECT * FROM Users WHERE ${column}=$1`, [value]);
 
 const register = ({ name, email, username, password, phone }: NewUser) =>
-    Query(`INSERT INTO Users (name, email, username, password, phone) VALUES ($1, $2, $3, $4, $5)`, [
+    Query(`INSERT INTO Users (name, email, username, password, phone) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [
         name,
         email,
         username,

@@ -39,7 +39,7 @@ export const sendVerificationEmail = async (user_id: User["id"], email: string) 
         await db.codes.create({ id: uuid, user_id, created_at, expires_at });
         await sendMail({
             to: email,
-            from: "<Registration>registration@atlc.dev",
+            from: "<Registration> registration@atlc.dev",
             subject: "Click the link plz",
             body: `
           <h1>Click the link to verify your account</h1>
