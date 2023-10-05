@@ -28,7 +28,7 @@ export const checkEm: RequestHandler = async (req, res, next) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        if (user.emailVerified) {
+        if (user.email_verified) {
             req.user = { id: user.id };
             next();
         } else {

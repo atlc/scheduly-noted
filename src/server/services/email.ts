@@ -42,8 +42,8 @@ export const sendVerificationEmail = async (user_id: User["id"], email: string) 
             from: "<Registration> registration@atlc.dev",
             subject: "Click the link plz",
             body: `
-          <h1>Click the link to verify your account</h1>
-          <a href="${domain.base}/verify?code=${uuid}">Verify</a>
+    <h1>Click the link to <a href="${domain.base}/verify?code=${uuid}">verify your account</a></h1>
+    <h2>Please note that any previous codes will be invalidated, and this code will only be valid for 15 minutes.</h2>
         `,
         });
     } catch (error) {

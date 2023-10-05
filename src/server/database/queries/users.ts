@@ -23,7 +23,7 @@ const register = ({ name, email, username, password, phone }: NewUser) =>
         phone,
     ]);
 
-const verify = (id: User["id"]) => Query("UPDATE Users SET emailVerified=1 WHERE id=$1", [id]);
+const verify = (id: User["id"]) => Query("UPDATE Users SET email_verified=1 WHERE id=$1", [id]);
 
 export default {
     register,

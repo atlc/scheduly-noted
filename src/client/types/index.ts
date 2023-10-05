@@ -9,9 +9,9 @@ export interface User {
     name: VARCHAR;
     username: VARCHAR; // UNIQUE
     email: VARCHAR; // UNIQUE
-    emailVerified: TINYINT; // DEFAULT 0
+    email_verified: TINYINT; // DEFAULT 0
     phone: VARCHAR;
-    phoneVerified: TINYINT; // DEFAULT 0
+    phone_verified: TINYINT; // DEFAULT 0
     password: CHAR; //60
     created_at: DATETIME;
     image_url: VARCHAR;
