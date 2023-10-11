@@ -1,10 +1,10 @@
 import { RequestHandler } from "express";
 import utils from "../utils";
 import db from "../database";
-import { sendVerificationEmail } from "../services/email";
+import { sendMFAEmail, sendVerificationEmail } from "../services/email";
 
 export const checkEm: RequestHandler = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, code } = req.body;
 
     const allAreGood = utils.validators.allStringsAreGood([
         [email, 128, 6],
@@ -29,8 +29,41 @@ export const checkEm: RequestHandler = async (req, res, next) => {
         }
 
         if (user.email_verified) {
-            req.user = { id: user.id };
-            next();
+            if (user.mfa_preference === "none") {
+                req.user = { id: user.id };
+                next();
+            } else if (user.mfa_preference === "email") {
+                if (!code) {
+                    await sendMFAEmail(user.id, user.email);
+                    res.status(403).json({
+                        message: "Please check your inbox for your temporary code.",
+                        shouldShowCode: true,
+                    });
+                } else {
+                    const [db_code] = await db.codes.get(code);
+                    if (!db_code) {
+                        await sendMFAEmail(user.id, user.email);
+                        res.status(403).json({
+                            message: "Invalid code - please check your inbox for your temporary code.",
+                            shouldShowCode: true,
+                        });
+                    } else {
+                        const now = Date.now();
+                        if (now > db_code.expires_at) {
+                            await sendMFAEmail(user.id, user.email);
+                            res.status(403).json({
+                                message: "Code expired - please check your inbox for your temporary code.",
+                                shouldShowCode: true,
+                            });
+                        } else {
+                            req.user = { id: user.id };
+                            next();
+                        }
+                    }
+                }
+            } else {
+                // do phone thingz
+            }
         } else {
             await sendVerificationEmail(user.id, user.email);
             res.status(403).json({ message: "Verify your email in order to log in" });
