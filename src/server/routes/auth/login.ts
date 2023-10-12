@@ -1,12 +1,9 @@
 import express from "express";
-import utils from "../../utils";
 import mw from "../../middlewares";
+import controllers from "../../controllers";
 
 const router = express.Router();
 
-router.post("/", mw.login, (req, res) => {
-    const token = utils.tokens.sign({ id: req.user.id });
-    res.status(200).json({ message: "Successfully logged in!", token });
-});
+router.post("/", mw.login, controllers.auth.login);
 
 export default router;
